@@ -1,0 +1,8 @@
+# XML strategy evaluation
+
+| Strategy | E1 | E2 (ms) | E3 | F(V) | TP | FP | FN | TN |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| V1_XML_XSD_BASIC | 0.2500 | 0.5750 | 0.5000 | 0.6000 | 20 | 10 | 0 | 10 |
+| V2_XML_XSD_STRICT | 0.5000 | 0.1500 | 1.0000 | 0.5522 | 0 | 0 | 20 | 20 |
+
+Best strategy: `V2_XML_XSD_STRICT`
