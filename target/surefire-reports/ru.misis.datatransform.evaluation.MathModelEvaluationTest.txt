@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ru.misis.datatransform.evaluation.MathModelEvaluationTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.104 s -- in ru.misis.datatransform.evaluation.MathModelEvaluationTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.374 s -- in ru.misis.datatransform.evaluation.MathModelEvaluationTest

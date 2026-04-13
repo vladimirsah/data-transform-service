@@ -23,7 +23,7 @@ final class StrategyEvaluationRunner {
         int fp = 0;
         int fn = 0;
         int tn = 0;
-        double totalMs = 0;
+        double totalUs = 0;
         double totalDiagnosticRecall = 0;
 
         for (EvaluationCase oneCase : cases) {
@@ -31,6 +31,8 @@ final class StrategyEvaluationRunner {
             request.setPayload(oneCase.payload());
             request.setXsdPath(oneCase.xsdPath());
             request.setValidationStrategy(strategy.name());
+
+            runWarmup(request);
 
             boolean predictedValid;
             Set<String> actualErrorCodes = Set.of();
@@ -42,8 +44,8 @@ final class StrategyEvaluationRunner {
                 predictedValid = false;
                 actualErrorCodes = extractCodes(ex.getErrors());
             }
-            long elapsedMs = (System.nanoTime() - started) / 1_000_000;
-            totalMs += elapsedMs;
+            long elapsedUs = (System.nanoTime() - started) / 1_000;
+            totalUs += elapsedUs;
 
             if (oneCase.expectedValid()) {
                 if (predictedValid) {
@@ -69,7 +71,7 @@ final class StrategyEvaluationRunner {
 
         int n = cases.size();
         double e1 = (double) (fp + fn) / n;
-        double e2 = totalMs / n;
+        double e2 = totalUs / n;
         long invalidCases = cases.stream().filter(c -> !c.expectedValid()).count();
         double e3 = invalidCases == 0 ? 1.0 : totalDiagnosticRecall / invalidCases;
 
@@ -82,5 +84,15 @@ final class StrategyEvaluationRunner {
             codes.add(error.code());
         }
         return codes;
+    }
+
+    private void runWarmup(TransformRequestDto request) {
+        for (int i = 0; i < 3; i++) {
+            try {
+                conversionFacade.convert(request);
+            } catch (ValidationException ignored) {
+                // Warmup should not affect measured results.
+            }
+        }
     }
 }

@@ -18,10 +18,15 @@ public class JsonValidator {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void validateBasic(String jsonPayload) {
+        JsonNode node;
         try {
-            objectMapper.readTree(jsonPayload);
+            node = objectMapper.readTree(jsonPayload);
         } catch (Exception ex) {
             throw ValidationException.single("JSON_VALIDATION_ERROR", "payload", ex.getMessage());
+        }
+
+        if (!node.has("id") || node.get("id").asText().isBlank()) {
+            throw ValidationException.single("REQUIRED_FIELD", "id", "Field 'id' is required");
         }
     }
 

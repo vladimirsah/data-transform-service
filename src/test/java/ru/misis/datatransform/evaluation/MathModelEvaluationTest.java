@@ -73,7 +73,7 @@ class MathModelEvaluationTest {
 
     private void writeCsv(Path file, List<EvaluationResult> results, Map<ValidationStrategyType, Double> scores) throws IOException {
         StringBuilder sb = new StringBuilder();
-        sb.append("strategy,E1,E2_ms,E3,F,TP,FP,FN,TN\n");
+        sb.append("strategy,E1,E2_us,E3,F,TP,FP,FN,TN\n");
         for (EvaluationResult result : results) {
             sb.append(result.strategy().name()).append(",")
                     .append(format(result.e1())).append(",")
@@ -92,7 +92,7 @@ class MathModelEvaluationTest {
                                Map<ValidationStrategyType, Double> scores) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("# ").append(formatName).append(" strategy evaluation\n\n");
-        sb.append("| Strategy | E1 | E2 (ms) | E3 | F(V) | TP | FP | FN | TN |\n");
+        sb.append("| Strategy | E1 | E2 (us) | E3 | F(V) | TP | FP | FN | TN |\n");
         sb.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|\n");
         for (EvaluationResult result : results) {
             sb.append("| ").append(result.strategy().name()).append(" | ")
@@ -142,7 +142,7 @@ class MathModelEvaluationTest {
         for (EvaluationResult result : results) {
             double score = scores.get(result.strategy());
             System.out.printf(
-                    "%s | E1=%.4f | E2=%.2f ms | E3=%.4f | F=%.4f | TP=%d FP=%d FN=%d TN=%d%n",
+                    "%s | E1=%.4f | E2=%.2f us | E3=%.4f | F=%.4f | TP=%d FP=%d FN=%d TN=%d%n",
                     result.strategy().name(),
                     result.e1(),
                     result.e2(),
@@ -184,12 +184,12 @@ class MathModelEvaluationTest {
 
         for (int i = 31; i <= 40; i++) {
             cases.add(new EvaluationCase(
-                    "xml-invalid-negative-amount-" + i,
-                    "<order><id>" + i + "</id><status>NEW</status><amount>-" + i + ".0</amount></order>",
+                    "xml-invalid-missing-status-" + i,
+                    "<order><id>" + i + "</id><amount>" + (10 + i) + ".0</amount></order>",
                     xsd,
                     false,
-                    Set.of("INVALID_RANGE"),
-                    ValidationStrategyType.V2_XML_XSD_STRICT
+                    Set.of("XML_VALIDATION_ERROR"),
+                    ValidationStrategyType.V1_XML_XSD_BASIC
             ));
         }
         return cases;
@@ -209,7 +209,18 @@ class MathModelEvaluationTest {
             ));
         }
 
-        for (int i = 21; i <= 27; i++) {
+        for (int i = 21; i <= 25; i++) {
+            cases.add(new EvaluationCase(
+                    "json-invalid-missing-id-" + i,
+                    "{\"status\":\"NEW\",\"amount\":77.7}",
+                    null,
+                    false,
+                    Set.of("REQUIRED_FIELD"),
+                    ValidationStrategyType.V4_JSON_SCHEMA_STRICT
+            ));
+        }
+
+        for (int i = 26; i <= 30; i++) {
             cases.add(new EvaluationCase(
                     "json-invalid-type-" + i,
                     "{\"id\":\"j" + i + "\",\"status\":\"NEW\",\"amount\":\"abc\"}",
@@ -220,7 +231,7 @@ class MathModelEvaluationTest {
             ));
         }
 
-        for (int i = 28; i <= 34; i++) {
+        for (int i = 31; i <= 35; i++) {
             cases.add(new EvaluationCase(
                     "json-invalid-missing-status-" + i,
                     "{\"id\":\"j" + i + "\",\"amount\":77.7}",
@@ -231,7 +242,7 @@ class MathModelEvaluationTest {
             ));
         }
 
-        for (int i = 35; i <= 40; i++) {
+        for (int i = 36; i <= 40; i++) {
             cases.add(new EvaluationCase(
                     "json-invalid-date-" + i,
                     "{\"id\":\"j" + i + "\",\"status\":\"NEW\",\"amount\":55.5,\"createdDate\":\"13.04.2026\"}",
