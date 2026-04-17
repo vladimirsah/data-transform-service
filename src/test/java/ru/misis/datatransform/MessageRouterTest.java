@@ -23,6 +23,12 @@ class MessageRouterTest {
     }
 
     @Test
+    void shouldDetectJsonArrayFormat() {
+        MessageFormat format = messageRouter.defineFormat("[{\"id\": \"1\"}]");
+        Assertions.assertEquals(MessageFormat.JSON, format);
+    }
+
+    @Test
     void shouldThrowOnUnsupportedPayload() {
         Assertions.assertThrows(ValidationException.class, () -> messageRouter.defineFormat("plain-text"));
     }

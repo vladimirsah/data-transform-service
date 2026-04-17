@@ -1,5 +1,7 @@
 /Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/MessageRouterTest.java
 /Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/TransformFacadeTest.java
+/Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/core/validator/JsonValidatorTest.java
+/Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/core/validator/XmlStrictValidatorTest.java
 /Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/evaluation/EvaluationCase.java
 /Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/evaluation/EvaluationResult.java
 /Users/vladimirsakharov/IdeaProjects/data-transform-service/src/test/java/ru/misis/datatransform/evaluation/MathModelEvaluationTest.java

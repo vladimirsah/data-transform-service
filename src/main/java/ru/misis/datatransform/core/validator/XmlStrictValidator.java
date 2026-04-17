@@ -12,9 +12,12 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class XmlStrictValidator {
+
+    private static final Pattern INN_PATTERN = Pattern.compile("^\\d{10}(\\d{2})?$");
 
     public void validate(String xmlPayload) {
         Document document;
@@ -31,6 +34,7 @@ public class XmlStrictValidator {
         validateRequiredText(document, "id", errors);
         validateRequiredText(document, "status", errors);
         validateAmount(document, errors);
+        validateInn(document, errors);
 
         if (!errors.isEmpty()) {
             throw ValidationException.multiple(errors);
@@ -57,6 +61,16 @@ public class XmlStrictValidator {
             }
         } catch (Exception ex) {
             errors.add(new ErrorDto("INVALID_TYPE", "amount", "Field 'amount' should be numeric"));
+        }
+    }
+
+    private void validateInn(Document document, List<ErrorDto> errors) {
+        String inn = getFirstTagValue(document, "inn");
+        if (inn == null || inn.isBlank()) {
+            return;
+        }
+        if (!INN_PATTERN.matcher(inn.trim()).matches()) {
+            errors.add(new ErrorDto("INN_FORMAT_ERROR", "inn", "INN must match pattern ^\\d{10}(\\d{2})?$"));
         }
     }
 

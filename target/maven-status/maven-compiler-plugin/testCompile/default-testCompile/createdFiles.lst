@@ -1,6 +1,8 @@
 ru/misis/datatransform/MessageRouterTest.class
-ru/misis/datatransform/evaluation/EvaluationResult.class
+ru/misis/datatransform/core/validator/XmlStrictValidatorTest.class
 ru/misis/datatransform/evaluation/MathModelEvaluationTest.class
-ru/misis/datatransform/evaluation/StrategyEvaluationRunner.class
 ru/misis/datatransform/evaluation/EvaluationCase.class
 ru/misis/datatransform/TransformFacadeTest.class
+ru/misis/datatransform/core/validator/JsonValidatorTest.class
+ru/misis/datatransform/evaluation/EvaluationResult.class
+ru/misis/datatransform/evaluation/StrategyEvaluationRunner.class

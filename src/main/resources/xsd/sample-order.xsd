@@ -6,6 +6,7 @@
                 <xs:element name="id" type="xs:string"/>
                 <xs:element name="status" type="xs:string"/>
                 <xs:element name="amount" type="xs:decimal"/>
+                <xs:element name="inn" type="xs:string" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

@@ -13,3 +13,9 @@ spring:
 app:
   rabbit:
     queue: transform.queue
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

@@ -8,6 +8,9 @@ import ru.misis.datatransform.exception.ValidationException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +45,7 @@ public class JsonValidator {
         validateRequiredText(node, "id", errors);
         validateRequiredText(node, "status", errors);
         validateAmount(node, errors);
-        validateDate(node, "createdDate", errors);
+        validateIso8601Date(node, "createdDate", errors);
 
         if (!errors.isEmpty()) {
             throw ValidationException.multiple(errors);
@@ -70,14 +73,35 @@ public class JsonValidator {
         }
     }
 
-    private void validateDate(JsonNode node, String field, List<ErrorDto> errors) {
-        if (!node.has(field)) {
+    private void validateIso8601Date(JsonNode node, String field, List<ErrorDto> errors) {
+        if (!node.has(field) || node.get(field).asText().isBlank()) {
+            errors.add(new ErrorDto("REQUIRED_FIELD", field, "Field '" + field + "' is required"));
             return;
         }
+        String text = node.get(field).asText();
+        if (!isIso8601DateTime(text)) {
+            errors.add(new ErrorDto("INVALID_FORMAT", field, "Field '" + field + "' should be ISO-8601"));
+        }
+    }
+
+    private boolean isIso8601DateTime(String text) {
         try {
-            LocalDate.parse(node.get(field).asText());
-        } catch (DateTimeParseException ex) {
-            errors.add(new ErrorDto("INVALID_FORMAT", field, "Field '" + field + "' should be in ISO date format"));
+            OffsetDateTime.parse(text, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            return true;
+        } catch (DateTimeParseException ignored) {
+            // continue
+        }
+        try {
+            LocalDateTime.parse(text, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            return true;
+        } catch (DateTimeParseException ignored) {
+            // continue
+        }
+        try {
+            LocalDate.parse(text, DateTimeFormatter.ISO_LOCAL_DATE);
+            return true;
+        } catch (DateTimeParseException ignored) {
+            return false;
         }
     }
 }
